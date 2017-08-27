@@ -1,8 +1,12 @@
+#Simple version of tensorflow with a single softmax layer trained with gradient descent
+
 # Import all our libraries
 
 import sys
+import time
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
+from tensorflow.python.client import device_lib
 import matplotlib.pyplot as plt
 
 #training parameters
@@ -31,8 +35,8 @@ b = tf.Variable(tf.zeros([slabels]))
 
 #softmax model
 y = tf.nn.softmax(tf.matmul(x, W) + b)
-classify = tf.arg_max(y,1)
-labeler = tf.arg_max(vec_label,1)
+classify = tf.argmax(y,1)
+labeler = tf.argmax(vec_label,1)
 
 #define our cross entropy cost function sum(yhat*log(y)
 y_hat = tf.placeholder(tf.float32, [None, slabels]) #input label
@@ -43,15 +47,24 @@ train_step = tf.train.GradientDescentOptimizer(alpha).minimize(cross_entropy)
 
 #launch the tensorflow session
 sess = tf.InteractiveSession()
+device_lib.list_local_devices()
 
 #initialize variables
 tf.global_variables_initializer().run()
+
+
+#test runtime
+t0 = time.time()
 
 #run our training loop
 for _ in range(iterations):
     batch_x, batch_y = mnist.train.next_batch(samples)
     sess.run(train_step, feed_dict={x: batch_x, y_hat: batch_y})
 
+#test runtime
+t1 = time.time()
+total = t1-t0
+print("Training Time (s): ", total)
 
 #Check how good our classification is
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_hat,1))
@@ -60,7 +73,7 @@ sample_acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y_hat: mnist.te
 print("Accuracy=",sample_acc)
 
 #sample id
-sid = 15
+sid = 36
 test_label = mnist.test.labels[sid].reshape(1,slabels)
 test_image = mnist.test.images[sid].reshape(1,simages)
 

@@ -1,4 +1,10 @@
+#Same as basic_mnist.py
+
+import sys
+import time
 import tensorflow as tf
+from tensorflow.python.client import device_lib
+import matplotlib.pyplot as plt
 
 #import mnist
 from tensorflow.examples.tutorials.mnist import input_data

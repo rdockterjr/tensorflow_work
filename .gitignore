@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 
 MNIST_data
+*.jpg
+*.tfrecord
 
 # C extensions
 *.so
